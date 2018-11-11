@@ -76,4 +76,4 @@ def logout():
 def unauthorized_handler():
     return 'Unauthorized'
 
-@app.route('/dashboard')
+#@app.route('/dashboard')
