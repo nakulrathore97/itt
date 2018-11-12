@@ -1,4 +1,5 @@
 import flask
+from flask import render_template
 
 app = flask.Flask(__name__)
 app.secret_key = 'super secret string'  # Change this!
@@ -77,3 +78,33 @@ def unauthorized_handler():
     return 'Unauthorized'
 
 #@app.route('/dashboard')
+@app.route('/patient/<id>')
+@flask_login.login_required
+def profile(id):
+    import sqlite3
+    conn = sqlite3.connect("med.db")
+    c=conn.cursor()
+    flag=False
+    x = c.execute("SELECT * FROM record where patientid="+id)
+    for row in x:
+        id=row[0]  
+        name=row[1]
+        age=row[2]
+        gender=row[3]
+        loc=row[4]
+        his=row[5]
+        alle=row[6]
+        sym=row[7]
+        bg=row[8]
+        hb=row[9]
+        ins=row[10]
+        adm=row[11]
+        dan=row[12]
+        med=row[13]
+        flag=True
+    conn.commit()
+    conn.close()
+    if flag:  
+        return render_template('profile.html',id=id,name=name,age=age,gender=gender,loc=loc,his=his,alle=alle,sym=sym,bg=bg,hb=hb,ins=ins,adm=adm,dan=dan,med=med)
+    else:
+        return "patient id not in database"
